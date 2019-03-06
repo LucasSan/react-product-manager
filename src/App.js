@@ -13,8 +13,20 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.loadCategorias = this.loadCategorias.bind(this);
+    this.removeCategoria = this.removeCategoria.bind(this);
+    this.createCategoria = this.createCategoria.bind(this);
+    this.editCategoria = this.editCategoria.bind(this);
+    this.createProduto = this.createProduto.bind(this);
+    this.loadProdutos = this.loadProdutos.bind(this);
+    this.loadCategoria = this.loadCategoria.bind(this);
+    this.removeProduto = this.removeProduto.bind(this);
+    this.readProduto = this.readProduto.bind(this);
+    this.editProduto = this.editProduto.bind(this);
+
     this.state = {
-      categorias: []
+      categorias: [],
+      categoria: {},
+      produtos: []
     };
   }
 
@@ -29,10 +41,54 @@ class App extends Component {
   }
 
   removeCategoria(categoria) {
-    /*Api.deleteCategoria(categoria.id)
+    this.props.api.deleteCategoria(categoria.id)
         .then(() => {
             this.loadCategorias();
-        });*/
+        });
+  }
+
+  createCategoria(categoria) {
+    this.props.api.createCategoria(categoria)
+      .then((res) => this.loadCategorias());
+  }
+
+  editCategoria(categoria) {
+    this.props.api.editCategoria(categoria)
+      .then((res) => this.loadCategorias());
+  }
+
+  createProduto(produto) {
+    return this.props.api.createProduto(produto);
+  }
+
+  loadProdutos(categoria) {
+    this.props.api.loadProdutos(categoria)
+      .then((res) => {
+        this.setState({
+          produtos: res.data
+        });
+      });
+  }
+
+  loadCategoria(categoria) {
+    this.props.api.readCategoria(categoria)
+      .then((res) => {
+        this.setState({
+          categoria: res.data
+        });
+      });
+  }
+
+  removeProduto(produto) {
+    return this.props.api.deleteProduto(produto.id);
+  }
+
+  readProduto(id) {
+    return this.props.api.readProduto(id);
+  }
+
+  editProduto(produto) {
+    return this.props.api.editProduto(produto);
   }
 
   render() {
@@ -64,7 +120,19 @@ class App extends Component {
             <Route path='/produtos' render={(props) => { 
               return (<Produtos {...props}
                 loadCategorias={this.loadCategorias}
-                categorias={this.state.categorias} /> 
+                removeCategoria={this.removeCategoria}
+                createCategoria={this.createCategoria}
+                editCategoria={this.editCategoria}
+                categorias={this.state.categorias}
+                
+                editProduto={this.editProduto}
+                createProduto={this.createProduto}
+                loadProdutos={this.loadProdutos}
+                loadCategoria={this.loadCategoria}
+                produtos={this.state.produtos}
+                categoria={this.state.categoria}
+                removeProduto={this.removeProduto}
+                readProduto={this.readProduto} /> 
               )} } />
           </div>
         </div>
