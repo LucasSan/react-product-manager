@@ -3,40 +3,18 @@ import { Route, Link } from 'react-router-dom';
 import ProdutosHome from './ProdutosHome';
 import Categoria from './Categoria';
 import axios from 'axios';
-import Api from './Api';
 
 class Produtos extends Component {
     // usaremos o construtor pra setar o estado
     // iniciar do component.
     constructor(props) {
         super(props);
-        this.state = {
-            categorias: []
-        };
         this.handleNewCategoria = this.handleNewCategoria.bind(this);
-        this.loadCategorias = this.loadCategorias.bind(this);
-        this.renderCategoria = this.renderCategoria.bind(this);
-    }
-
-    loadCategorias() {
-        // buscar categorias.
-        Api.loadCategorias()
-            .then(res => {
-                this.setState({
-                    categorias: res.data
-                })
-            });
+        //this.renderCategoria = this.renderCategoria.bind(this);
     }
     
     componentDidMount() {
-        this.loadCategorias();
-    }
-
-    removeCategoria(categoria) {
-        Api.deleteCategoria(categoria.id)
-            .then(() => {
-                this.loadCategorias();
-            });
+        this.props.loadCategorias();
     }
 
     renderCategoria(cat) {
@@ -58,14 +36,13 @@ class Produtos extends Component {
                 })
                 .then(res => {
                     this.refs.categoria.value = '';
-                    this.loadCategorias();
+                    // this.loadCategorias();
                 })
         }
     }
 
     render() {
-        const { match } = this.props;
-        const { categorias } = this.state;
+        const { match, categorias } = this.props;
         return (
             <div className='row'>
                 <div className='col-md-2'>
